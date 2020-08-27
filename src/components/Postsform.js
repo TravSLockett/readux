@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { createPost } from "../actions/postActions";
+import { createPost, testPost, resetPost } from "../actions/postActions";
 
 class PostsForm extends Component {
   constructor(props) {
@@ -13,13 +13,22 @@ class PostsForm extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
-  onSubmit(e) {
+  async onSubmit(e) {
+    console.log(this.props.test);
     e.preventDefault();
     const post = {
       title: this.state.title,
       body: this.state.body,
     };
-    this.props.createPost(post);
+
+    //await this.props.createPost(post);
+    await this.props.resetPost("Not TESTING");
+    console.log("trying to print out props.test");
+    console.log("1111");
+    console.log(this.props.test);
+    if (this.props.test === "TESTING") {
+      alert("it is TESTING");
+    }
   }
 
   render() {
@@ -57,5 +66,14 @@ class PostsForm extends Component {
 }
 PostsForm.propTypes = {
   createPost: PropTypes.func.isRequired,
+  testPost: PropTypes.func.isRequired,
 };
-export default connect(null, { createPost })(PostsForm);
+
+const mapStateToProps = (state) => ({
+  test: state.posts.test,
+  item: state.posts.item,
+});
+
+export default connect(mapStateToProps, { createPost, testPost, resetPost })(
+  PostsForm
+);
